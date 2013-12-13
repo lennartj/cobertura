@@ -61,4 +61,37 @@ public class T_AbstractLocalizableReportTest {
         // Act & Assert
         new DebugLocalizableReport(null, localizedResources, generationTimestamp, registry);
     }
+
+    @Test(expected = NullPointerException.class)
+    public void validateExceptionOnNullResources() {
+
+        // Act & Assert
+        new DebugLocalizableReport(activeLocale, null, generationTimestamp, registry);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void validateExceptionOnNullTimestamp() {
+
+        // Act & Assert
+        new DebugLocalizableReport(activeLocale, localizedResources, null, registry);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void validateExceptionOnNullRegistry() {
+
+        // Act & Assert
+        new DebugLocalizableReport(activeLocale, localizedResources, generationTimestamp, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void validateExceptionOnNoNameInLocalResource() {
+
+        // Assemble
+        final ResourceBundleLocalResources lr =
+                new ResourceBundleLocalResources("testdata/i18n/incorrectNoName", activeLocale);
+
+
+        // Act & Assert
+        new DebugLocalizableReport(activeLocale, lr, generationTimestamp, registry);
+    }
 }
