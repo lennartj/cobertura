@@ -59,7 +59,7 @@ public class SourceLocationFilterTest {
 
         final String invalidPackage = "net.sourceforge_cobertura.metrics.model.coverage";
         final String parentPackage  = "net.sourceforge.cobertura.metrics.model";
-        final String subPackage  = "net.sourceforge.cobertura.metrics.model.foobar";
+        final String subPackage  = "net.sourceforge.cobertura.metrics.model.coverage.foobar";
 
         // Act & Assert
         Assert.assertTrue(escapedNamePattern.matcher(pkg).matches());
@@ -74,14 +74,14 @@ public class SourceLocationFilterTest {
     public void validateConveniencePatternMethods() {
 
         // Assemble
-        final Package ratePackage = Rate.class.getPackage(); // "net.sourceforge.cobertura.metrics.model"
+        final Package ratePackage = Rate.class.getPackage(); // "net.sourceforge.cobertura.metrics.model.coverage"
         final String noSubpackagesExpectedPattern = ratePackage.getName().replaceAll("\\.", "\\\\.");
         final String withSubpackagesExpectedPattern = noSubpackagesExpectedPattern + "(\\.\\w*)*";
 
         final String invalidPackage = "net.sourceforge_cobertura.metrics.model.coverage";
         final String parentPackage  = "net.sourceforge.cobertura.metrics.model";
-        final String exactPackage  = "net.sourceforge.cobertura.metrics.model";
-        final String subPackage  = "net.sourceforge.cobertura.metrics.model.foobar";
+        final String exactPackage  = "net.sourceforge.cobertura.metrics.model.coverage";
+        final String subPackage  = "net.sourceforge.cobertura.metrics.model.coverage.foobar";
 
         // Act
         final Pattern noSubpackages = Pattern.compile(SourceLocationFilter.getPattern(ratePackage, false));
@@ -91,7 +91,6 @@ public class SourceLocationFilterTest {
         Assert.assertEquals(noSubpackagesExpectedPattern, noSubpackages.pattern());
         Assert.assertEquals(withSubpackagesExpectedPattern, withSubpackages.pattern());
 
-        System.out.println("Got: " + withSubpackages.pattern());
         Assert.assertTrue(withSubpackages.matcher(subPackage).matches());
         Assert.assertFalse(withSubpackages.matcher(parentPackage).matches());
         Assert.assertFalse(withSubpackages.matcher(invalidPackage).matches());
