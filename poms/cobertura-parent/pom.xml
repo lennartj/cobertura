@@ -334,11 +334,21 @@
             </dependency>
 
             <!--
-                Algorithm dependencies
+                Algorithm and i18n dependencies
             -->
             <dependency>
                 <groupId>se.jguru.nazgul.core.algorithms.api</groupId>
                 <artifactId>nazgul-core-algorithms-api</artifactId>
+                <version>${nazgul-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>se.jguru.nazgul.core.resource.api</groupId>
+                <artifactId>nazgul-core-resource-api</artifactId>
+                <version>${nazgul-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>se.jguru.nazgul.core.resource.impl.resourcebundle</groupId>
+                <artifactId>nazgul-core-resource-impl-resourcebundle</artifactId>
                 <version>${nazgul-core.version}</version>
             </dependency>
 

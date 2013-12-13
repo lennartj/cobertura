@@ -99,6 +99,9 @@
         <module>interaction</module>
         <module>conversion</module>
         <module>metrics</module>
+        <module>reporting</module>
+
+        <!-- Legacy module, to be removed when project is fully modularized -->
         <module>cobertura</module>
     </modules>
 
