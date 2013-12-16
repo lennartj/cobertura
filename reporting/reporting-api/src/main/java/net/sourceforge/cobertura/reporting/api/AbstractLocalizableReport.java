@@ -75,7 +75,7 @@ public abstract class AbstractLocalizableReport implements LocalizableReport {
      * {@inheritDoc}
      */
     @Override
-    public void setLocale(final Locale preferredLocale) {
+    public final void setLocale(final Locale preferredLocale) {
 
         // Check sanity
         Validate.notNull(preferredLocale, "Cannot handle null preferredLocale argument.");
