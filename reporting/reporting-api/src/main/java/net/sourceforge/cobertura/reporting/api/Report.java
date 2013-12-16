@@ -19,7 +19,6 @@
  */
 package net.sourceforge.cobertura.reporting.api;
 
-import net.sourceforge.cobertura.reporting.api.export.ExporterRegistry;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -33,11 +32,11 @@ import java.io.Serializable;
 public interface Report extends Serializable {
 
     /**
-     * Retrieves the human-readable name of this Report.
+     * Retrieves the identifier of this Report.
      *
-     * @return the non-null name of this Report.
+     * @return the non-null identifier of this Report.
      */
-    String getName();
+    LocalizedReportIdentifier getId();
 
     /**
      * Acquires the timestamp when this Report was generated.
@@ -45,23 +44,4 @@ public interface Report extends Serializable {
      * @return the timestamp when this Report was generated.
      */
     DateTime getGenerationTimestamp();
-
-    /**
-     * Retrieves the active ExporterRegistry in use for this Report.
-     *
-     * @return the active ExporterRegistry in use for this Report.
-     */
-    ExporterRegistry getExporterRegistry();
-
-    /**
-     * Exports this Report using the supplied format to the given target directory or file.
-     *
-     * @param format The desired reporting export format, which must be one of the formats
-     *               retrieved from the {@code getAvailableFormats() } method.
-     * @param target The target resource (i.e. directory or file path) to which this Report
-     *               should be exported.
-     * @throws IllegalArgumentException If the format given was not available for this ReportExporter,
-     *                                  or if the supplied target was invalid for exporting the report.
-     */
-    void export(String format, String target) throws IllegalArgumentException;
 }

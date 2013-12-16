@@ -31,6 +31,7 @@
     -->
     <modules>
         <module>reporting-api</module>
+        <module>reporting-spi-markup</module>
         <!-- module>reporting-impl-legacy</module -->
     </modules>
 
