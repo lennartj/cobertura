@@ -28,11 +28,11 @@
     <!-- +=============================================== -->
     <dependencies>
         <!-- Internal dependencies -->
-        <!-- dependency>
-            <groupId>net.sourceforge.cobertura.reporting.model</groupId>
-            <artifactId>cobertura-reporting-model</artifactId>
+        <dependency>
+            <groupId>net.sourceforge.cobertura.metrics.model</groupId>
+            <artifactId>cobertura-metrics-model</artifactId>
             <version>3.0.0-SNAPSHOT</version>
-        </dependency -->
+        </dependency>
 
         <!-- External dependencies. -->
         <dependency>

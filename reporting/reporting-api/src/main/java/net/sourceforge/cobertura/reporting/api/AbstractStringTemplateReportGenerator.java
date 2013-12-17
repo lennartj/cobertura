@@ -156,7 +156,7 @@ public abstract class AbstractStringTemplateReportGenerator<T extends Report, V>
         SortedMap<Integer, String> localTemplates = new TreeMap<Integer, String>();
         for (Map.Entry<LocalizedReportIdentifier, String> current : templates.entrySet()) {
 
-            // Should we
+            // Add all templates whose IDs start with the supplied identifier.
             final LocalizedReportIdentifier key = current.getKey();
             if (identifier.getId().equals(key.getId()) && identifier.getLocale().getLanguage().equals(
                     key.getLocale().getLanguage())) {
