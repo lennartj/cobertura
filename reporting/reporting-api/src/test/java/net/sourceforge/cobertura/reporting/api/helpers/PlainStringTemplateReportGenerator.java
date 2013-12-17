@@ -22,6 +22,9 @@ package net.sourceforge.cobertura.reporting.api.helpers;
 import net.sourceforge.cobertura.reporting.api.AbstractStringTemplateReportGenerator;
 import net.sourceforge.cobertura.reporting.api.LocalizedReportIdentifier;
 import org.joda.time.DateTime;
+import se.jguru.nazgul.core.parser.api.DefaultTokenParser;
+import se.jguru.nazgul.core.parser.api.TokenParser;
+import se.jguru.nazgul.core.resource.impl.resourcebundle.parser.StaticReplacementParserAgent;
 
 import java.util.Map;
 import java.util.SortedMap;
@@ -29,7 +32,7 @@ import java.util.SortedMap;
 /**
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid, jGuru Europe AB</a>
  */
-public class DummyStringTemplateReportGenerator extends AbstractStringTemplateReportGenerator<DummyReport> {
+public class PlainStringTemplateReportGenerator extends AbstractStringTemplateReportGenerator<PlainStringReport, String> {
 
     // Internal state
     private DateTime generationTime;
@@ -37,7 +40,7 @@ public class DummyStringTemplateReportGenerator extends AbstractStringTemplateRe
     /**
      * Default constructor creating an AbstractStringTemplateReportGenerator with empty internal state.
      */
-    public DummyStringTemplateReportGenerator(final DateTime generationTime) {
+    public PlainStringTemplateReportGenerator(final DateTime generationTime) {
         this.generationTime = generationTime;
     }
 
@@ -49,7 +52,7 @@ public class DummyStringTemplateReportGenerator extends AbstractStringTemplateRe
      *                   typically markup-formatted strings of some kind.
      * @param id2DataMap A map relating identifiers to maps holding (token to value) tuples, used in
      */
-    public DummyStringTemplateReportGenerator(final Map<LocalizedReportIdentifier, String> templates,
+    public PlainStringTemplateReportGenerator(final Map<LocalizedReportIdentifier, String> templates,
                                               final Map<String, Map<String, String>> id2DataMap,
                                               final DateTime generationTime) {
         super(templates, id2DataMap);
@@ -65,9 +68,26 @@ public class DummyStringTemplateReportGenerator extends AbstractStringTemplateRe
      * @return The generated report.
      */
     @Override
-    protected DummyReport doCompileReport(final LocalizedReportIdentifier nonNullIdentifier,
-                                          final SortedMap<Integer, String> templates) {
+    protected PlainStringReport doCompileReport(final LocalizedReportIdentifier nonNullIdentifier,
+                                                final SortedMap<Integer, String> templates) {
 
-        return new DummyReport(nonNullIdentifier, generationTime, templates);
+        // Get the appropriate tokens
+        final Map<String, String> keyValueTokenMap = getId2DataMap().get(nonNullIdentifier.getId());
+
+        // Initialize a parser
+        final TokenParser parser = new DefaultTokenParser();
+        final StaticReplacementParserAgent staticTokenParserAgent = new StaticReplacementParserAgent();
+        parser.addAgent(staticTokenParserAgent);
+        for(Map.Entry<String, String> current : keyValueTokenMap.entrySet()) {
+            staticTokenParserAgent.addStaticReplacement(current.getKey(), current.getValue());
+        }
+
+        final StringBuilder builder = new StringBuilder();
+        for(Map.Entry<Integer, String> current : templates.entrySet()) {
+            builder.append(parser.substituteTokens(current.getValue()));
+        }
+
+        // All done.
+        return new PlainStringReport(nonNullIdentifier, generationTime, builder.toString());
     }
 }

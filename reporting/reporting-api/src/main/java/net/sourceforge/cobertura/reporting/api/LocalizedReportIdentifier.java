@@ -181,7 +181,8 @@ public class LocalizedReportIdentifier implements Serializable, Comparable<Local
     @Override
     public boolean equals(final Object obj) {
 
-        if (obj == null || !(obj instanceof LocalizedReportIdentifier)) {
+        // This caters for null values as well.
+        if (!(obj instanceof LocalizedReportIdentifier)) {
             return false;
         }
 

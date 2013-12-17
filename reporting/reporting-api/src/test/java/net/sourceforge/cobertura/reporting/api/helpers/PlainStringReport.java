@@ -17,38 +17,33 @@
  * limitations under the License.
  * #L%
  */
-package net.sourceforge.cobertura.reporting.api;
+package net.sourceforge.cobertura.reporting.api.helpers;
 
+import net.sourceforge.cobertura.reporting.api.AbstractReport;
+import net.sourceforge.cobertura.reporting.api.LocalizedReportIdentifier;
 import org.joda.time.DateTime;
 
-import java.io.Serializable;
-
 /**
- * Specification for a generic Report in the context of Cobertura.
- * Details of Localization aspects of reporting are defined within subtypes.
- *
  * @author <a href="mailto:lj@jguru.se">Lennart J&ouml;relid, jGuru Europe AB</a>
  */
-public interface Report<R> extends Serializable {
+public class PlainStringReport extends AbstractReport<String> {
+
+    // Internal state
+    private String result;
+
+    public PlainStringReport(final LocalizedReportIdentifier reportIdentifier,
+                             final DateTime generationTimestamp,
+                             final String result) {
+
+        super(reportIdentifier, generationTimestamp);
+        this.result = result;
+    }
 
     /**
-     * Retrieves the identifier of this Report.
-     *
-     * @return the non-null identifier of this Report.
+     * {@inheritDoc}
      */
-    LocalizedReportIdentifier getId();
-
-    /**
-     * Acquires the timestamp when this Report was generated.
-     *
-     * @return the timestamp when this Report was generated.
-     */
-    DateTime getGenerationTimestamp();
-
-    /**
-     * Retrieves the Report result, if applicable.
-     *
-     * @return the Report result, or {@code null} if no result was available.
-     */
-    R getResult();
+    @Override
+    public String getResult() {
+        return result;
+    }
 }

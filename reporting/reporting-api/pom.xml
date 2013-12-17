@@ -81,6 +81,11 @@
             <artifactId>nazgul-core-resource-impl-resourcebundle</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>se.jguru.nazgul.core.parser.api</groupId>
+            <artifactId>nazgul-core-parser-api</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <!-- +=============================================== -->

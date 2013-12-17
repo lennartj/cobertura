@@ -82,8 +82,13 @@ public class LocalizedReportIdentifierTest {
 
         // Assert
         Assert.assertEquals(unitUnderTest1, unitUnderTest2);
+        Assert.assertEquals(unitUnderTest1, unitUnderTest1);
+        Assert.assertNotEquals(null, unitUnderTest1);
         Assert.assertNotSame(unitUnderTest1, unitUnderTest2);
         Assert.assertEquals(0, unitUnderTest1.compareTo(unitUnderTest2));
+        Assert.assertEquals(0, unitUnderTest1.compareTo(unitUnderTest1));
         Assert.assertEquals(unitUnderTest1.hashCode(), unitUnderTest2.hashCode());
+        Assert.assertNotEquals("foobar", unitUnderTest1);
+        Assert.assertEquals(Integer.MIN_VALUE, unitUnderTest1.compareTo(null));
     }
 }
