@@ -351,6 +351,11 @@
                 <artifactId>nazgul-core-resource-impl-resourcebundle</artifactId>
                 <version>${nazgul-core.version}</version>
             </dependency>
+            <dependency>
+                <groupId>se.jguru.nazgul.core.parser.api</groupId>
+                <artifactId>nazgul-core-parser-api</artifactId>
+                <version>${nazgul-core.version}</version>
+            </dependency>
 
             <!--
                Adapter dependencies
