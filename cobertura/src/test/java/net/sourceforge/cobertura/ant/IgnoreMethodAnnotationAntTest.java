@@ -1,35 +1,37 @@
 package net.sourceforge.cobertura.ant;
 
-import static org.junit.Assert.*;
-
-import java.io.File;
-
+import groovy.util.Node;
 import net.sourceforge.cobertura.test.util.TestUtils;
-
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class IgnoreMethodAnnotationAntTest extends AbstractCoberturaAntTestCase {
-	@Before
-	public void setUp() throws Exception {
-		buildXmlFile = new File("src",
-				"/test/resources/ant/IgnoreMethodAnnotation/build.xml");
 
-		String target = "all";
-		super.executeAntTarget(target);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getAntProjectDirectoryName() {
+        return "IgnoreMethodAnnotation";
+    }
 
-	@Test
-	public void test() {
-		String className = "test.condition.IgnoreMe";
-		String methodName = "foo";
+    @Test
+	public void validateAnnotatedMethodsAreIgnored() throws Exception {
 
-		assertEquals(0, TestUtils.getTotalHitCount(dom, className, methodName));
+        // Assemble
+        final String methodName = "foo";
 
-		className = "test.condition.IgnoreMeAlso";
-		assertEquals(0, TestUtils.getTotalHitCount(dom, className, methodName));
+        // Act
+        final Node dom = executeAntTarget("all");
 
-		className = "test.condition.IgnoreMeNot";
-		assertTrue(TestUtils.getHitCount(dom, className, methodName) > 0);
+        // Assert
+		Assert.assertEquals(0, TestUtils.getTotalHitCount(dom, "test.condition.IgnoreMe", methodName));
+        Assert.assertEquals(0, TestUtils.getTotalHitCount(dom, "test.condition.IgnoreMeAlso", methodName));
+		Assert.assertTrue(TestUtils.getHitCount(dom, "test.condition.IgnoreMeNot", methodName) > 0);
+
+        // For debugging purposes (i.e. taking a peek at the generated DOM),
+        // uncomment the line below.
+        //
+        // dom.print(new PrintWriter(System.out));
 	}
 }

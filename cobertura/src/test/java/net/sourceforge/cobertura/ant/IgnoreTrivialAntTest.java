@@ -1,128 +1,103 @@
 package net.sourceforge.cobertura.ant;
 
-import static org.junit.Assert.*;
-
-import java.io.File;
-import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
-
+import groovy.util.Node;
 import net.sourceforge.cobertura.test.IgnoreUtil;
-import net.sourceforge.cobertura.test.util.TestUtils;
-
-import org.junit.Before;
 import org.junit.Test;
-import org.xml.sax.SAXException;
 
 public class IgnoreTrivialAntTest extends AbstractCoberturaAntTestCase {
-	IgnoreUtil ignoreUtil;
-	@Before
-	public void setUp() throws Exception {
-		buildXmlFile = new File("src",
-				"/test/resources/ant/IgnoreTrivial/build.xml");
 
-		String target = "all";
-		super.executeAntTarget(target);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getAntProjectDirectoryName() {
+        return "IgnoreTrivial";
+    }
 
-	@Test
-	public void test() throws ParserConfigurationException, SAXException,
-			IOException {
-		dom = TestUtils.getXMLReportDOM(new File(buildXmlFile.getParentFile(),
-				"reports/cobertura-xml/coverage.xml"));
+    @Test
+	public void validateTrivialSectionsAreIgnored() throws Exception {
 
-		ignoreUtil = new IgnoreUtil("mypackage.Main", dom);
+        // Assemble
+        final String mainClass = "mypackage.Main";
+
+        // Act
+        final Node dom = executeAntTarget("all");
+        final IgnoreUtil ignoreUtil = new IgnoreUtil(mainClass, dom);
 
 		// trivial empty constructor
-		assertIgnored("<init>", "()V");
+        ignoreUtil.assertIgnored("<init>", "()V");
 
 		// trivial constructor Main(Thread, String) that just calls super()
-		assertIgnored("<init>", "(Ljava/lang/Thread;Ljava/lang/String;)V");
+        ignoreUtil.assertIgnored("<init>", "(Ljava/lang/Thread;Ljava/lang/String;)V");
 
 		// trivial getter
-		assertIgnored("getterTrivial");
+        ignoreUtil.assertIgnored("getterTrivial", null);
 
 		// isBool is trivial
-		assertIgnored("isBool");
+        ignoreUtil.assertIgnored("isBool", null);
 
 		// hasBool is trivial
-		assertIgnored("hasBool");
+        ignoreUtil.assertIgnored("hasBool", null);
 
 		// setInt is trivial
-		assertIgnored("setInt");
+        ignoreUtil.assertIgnored("setInt", null);
 
 		// Main(int) has non-trivial switch
-		assertNotIgnored("<init>", "(I)V");
+        ignoreUtil.assertNotIgnored("<init>", "(I)V");
 
 		// Main(boolean) has non-trivial conditional
-		assertNotIgnored("<init>", "(Z)V");
+        ignoreUtil.assertNotIgnored("<init>", "(Z)V");
 
 		// "empty" does not start with "get", "is", "has", or "set".
-		assertNotIgnored("empty");
+        ignoreUtil.assertNotIgnored("empty", null);
 
 		// gets with no return are considered non-trivial
-		assertNotIgnored("getVoid");
+        ignoreUtil.assertNotIgnored("getVoid", null);
 
 		// gets that have parameters are considered non-trivial
-		assertNotIgnored("getIntWithIntParm");
+        ignoreUtil.assertNotIgnored("getIntWithIntParm", null);
 
 		// sets that have no parameters are considered non-trivial
-		assertNotIgnored("set");
+        ignoreUtil.assertNotIgnored("set", null);
 
 		// sets that have more than one parameters are considered non-trivial
-		assertNotIgnored("setIntWithTwoParms");
+        ignoreUtil.assertNotIgnored("setIntWithTwoParms", null);
 
 		// don't ignore methods with multi-dimensional array creates
-		assertNotIgnored("getMultiDimArray");
+        ignoreUtil.assertNotIgnored("getMultiDimArray", null);
 
 		// don't ignore methods with increment instructions for local variables
-		assertNotIgnored("setIncrement");
+        ignoreUtil.assertNotIgnored("setIncrement", null);
 
 		// don't ignore methods with LDC instructions (that use constants from the runtime pool)
-		assertNotIgnored("setConst");
-		assertNotIgnored("<init>", "(Ljava/lang/Thread;I)V"); // Main(Thread, int)
+        ignoreUtil.assertNotIgnored("setConst", null);
+        ignoreUtil.assertNotIgnored("<init>", "(Ljava/lang/Thread;I)V"); // Main(Thread, int)
 
 		// don't ignore methods with a single int operand (like creating an array).
-		assertNotIgnored("getArray");
+        ignoreUtil.assertNotIgnored("getArray", null);
 
 		// don't ignore methods with type instructions (like creating an object).
-		assertNotIgnored("getObject");
+        ignoreUtil.assertNotIgnored("getObject", null);
 
 		// don't ignore methods that use statics.
-		assertNotIgnored("getStatic");
-		assertNotIgnored("setStatic");
-		assertNotIgnored("<init>", "(Ljava/lang/String;)V");
+        ignoreUtil.assertNotIgnored("getStatic", null);
+        ignoreUtil.assertNotIgnored("setStatic", null);
+        ignoreUtil.assertNotIgnored("<init>", "(Ljava/lang/String;)V");
 
 		// non-trivial local variable instructions (causes visitVarInsn call)
-		assertNotIgnored("setISTORE");
-		assertNotIgnored("setLSTORE");
-		assertNotIgnored("setFSTORE");
-		assertNotIgnored("setDSTORE");
-		assertNotIgnored("setASTORE");
+        ignoreUtil.assertNotIgnored("setISTORE", null);
+        ignoreUtil.assertNotIgnored("setLSTORE", null);
+        ignoreUtil.assertNotIgnored("setFSTORE", null);
+        ignoreUtil.assertNotIgnored("setDSTORE", null);
+        ignoreUtil.assertNotIgnored("setASTORE", null);
 
 		// non-trivial method calls
-		assertNotIgnored("getINVOKEVIRTUAL");
-		assertNotIgnored("getINVOKESPECIAL");
-		assertNotIgnored("getINVOKESTATIC");
-		assertNotIgnored("setINVOKEINTERFACE");
-		assertNotIgnored("<init>", "(Ljava/lang/String;Ljava/lang/String;)V"); // Main(String, String)
-		assertNotIgnored("<init>", "(Ljava/lang/String;I)V"); // Main(String, int)
-		assertNotIgnored("<init>", "(Ljava/lang/String;Z)V"); // Main(String, boolean)
-	}
-
-	public void assertIgnored(String methodName, String signature) {
-		ignoreUtil.assertIgnored(methodName, signature);
-	}
-
-	public void assertIgnored(String methodName) {
-		assertIgnored(methodName, null);
-	}
-
-	public void assertNotIgnored(String methodName, String signature) {
-		ignoreUtil.assertNotIgnored(methodName, signature);
-	}
-
-	public void assertNotIgnored(String methodName) {
-		assertNotIgnored(methodName, null);
+        ignoreUtil.assertNotIgnored("getINVOKEVIRTUAL", null);
+        ignoreUtil.assertNotIgnored("getINVOKESPECIAL", null);
+        ignoreUtil.assertNotIgnored("getINVOKESTATIC", null);
+        ignoreUtil.assertNotIgnored("setINVOKEINTERFACE", null);
+        ignoreUtil.assertNotIgnored("<init>", "(Ljava/lang/String;Ljava/lang/String;)V"); // Main(String, String)
+        ignoreUtil.assertNotIgnored("<init>", "(Ljava/lang/String;I)V"); // Main(String, int)
+        ignoreUtil.assertNotIgnored("<init>", "(Ljava/lang/String;Z)V"); // Main(String, boolean)
 	}
 }

@@ -11,7 +11,7 @@
     Cobertura comes with ABSOLUTELY NO WARRANTY
     </description>
 
-	<loadproperties srcFile="src/test/resources/ant/IgnoreTrivial/build.properties" />
+    <loadproperties srcFile="build.properties" />
 
 	<path id="project.classpath">
 		<path path="${java.class.path}" />
@@ -37,7 +37,9 @@
 	</target>
 
 	<target name="instrument-condition-coverage" depends="compile">
+        <echo message="Making instrumented dir ... "/>
 		<mkdir dir="${instrumented.dir}" />
+        <echo message="... got ${instrumented.dir}."/>
 		<cobertura-instrument datafile="${basedir}/cobertura.ser" todir="${instrumented.dir}" ignoreTrivial="true">
 			<ignore regex="org.slf4j.*" />
 			<fileset dir="${classes.dir}">

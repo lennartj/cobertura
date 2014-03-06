@@ -1,0 +1,3 @@
+Don't remove this file!
+It is used as a point of origin for hte AbstractCoberturaAntTestCase.
+// Lennart, 2014-03-06
