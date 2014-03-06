@@ -42,8 +42,6 @@ public abstract class AbstractCoberturaAntTestCase {
     // Shared state
     @Rule
     public TestName name = new TestName();
-    public Node dom;
-    public File buildXmlFile;
     private File antResourcesDir;
 
     /**
@@ -89,7 +87,7 @@ public abstract class AbstractCoberturaAntTestCase {
         Assert.assertTrue("ANT build.xml file not found. Attempted [" + buildXmlFile.getAbsolutePath() + "]",
                 buildXmlFile.isFile() && buildXmlFile.length() > 0);
 
-        System.out.println("Using build.xml file: " + buildXmlFile.getAbsolutePath());
+        // System.out.println("Using build.xml file: " + buildXmlFile.getAbsolutePath());
 
         Exception error = null;
         Project project = new Project();
@@ -113,10 +111,7 @@ public abstract class AbstractCoberturaAntTestCase {
         }
 
         // Generate the XML report DOM.
-        dom = TestUtils.getXMLReportDOM(new File(buildXmlFile.getParentFile(), COBERTURA_REPORTS_XML_PATH));
-
-        // All done.
-        return dom;
+        return TestUtils.getXMLReportDOM(new File(buildXmlFile.getParentFile(), COBERTURA_REPORTS_XML_PATH));
     }
 
     //
